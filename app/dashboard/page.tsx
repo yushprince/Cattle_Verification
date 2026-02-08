@@ -400,10 +400,11 @@ export default function Dashboard() {
               <div className="stat-label">Response</div>
             </div>
           </div>
+          
         </div>
-
+<UploadForm />
         <div className="content-section">
-          <UploadForm />
+          
 
           <div className="tips-section">
             <h2 className="tips-title">💡 Tips for Best Results</h2>
