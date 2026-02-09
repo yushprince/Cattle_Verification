@@ -111,7 +111,6 @@ export default function FaceCompareForm() {
       }
       
       return {
-        label: "Muzzle ↔ Face",
         similarity_score: similarity,
         similarity_percentage: Math.round(similarity_percent * 100) / 100,
         match_status,
@@ -135,8 +134,8 @@ export default function FaceCompareForm() {
         ...getMatchDetails(sim1)
       },
       pair2: {
-        label: "Pair 2: Muzzle ↔ Face",
-        ...getMatchDetails(sim2)
+        ...getMatchDetails(sim2),
+        label: "Pair 2: Muzzle ↔ Face"
       },
       analysis: {
         average_similarity: Math.round(avg * 10000) / 100,
