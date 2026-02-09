@@ -12,351 +12,156 @@ export default function Dashboard() {
   return (
     <>
       <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-
-        @keyframes slideInDown {
-          from {
-            opacity: 0;
-            transform: translateY(-30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0px) scale(1);
-          }
-          50% {
-            transform: translateY(-15px) scale(1.05);
-          }
-        }
-
-        @keyframes gradientShift {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-
-        @keyframes shimmer {
-          0% {
-            transform: translateX(-100%);
-          }
-          100% {
-            transform: translateX(100%);
-          }
-        }
-
         .dashboard-container {
           min-height: 100vh;
-          background: linear-gradient(
-            135deg,
-            #f0f4ff 0%,
-            #e8f0ff 25%,
-            #f5f0ff 50%,
-            #fff0f9 75%,
-            #f0f4ff 100%
-          );
-          background-size: 400% 400%;
-          animation: gradientShift 20s ease infinite;
-          padding: 6rem 2rem 3rem;
+          background: linear-gradient(135deg, #f0f4ff 0%, #fef3ff 50%, #f0f9ff 100%);
+          padding: 5rem 1rem 2rem;
           display: flex;
           flex-direction: column;
           align-items: center;
-          color: #2d3748;
-          position: relative;
-          overflow: hidden;
-          animation: fadeIn 0.6s ease;
-        }
-
-        .dashboard-container::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-image: 
-            radial-gradient(circle at 20% 30%, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
-            radial-gradient(circle at 80% 70%, rgba(240, 147, 251, 0.08) 0%, transparent 50%),
-            radial-gradient(circle at 50% 50%, rgba(118, 75, 162, 0.05) 0%, transparent 50%);
-          pointer-events: none;
-        }
-
-        .floating-shape {
-          position: absolute;
-          border-radius: 50%;
-          filter: blur(80px);
-          opacity: 0.4;
-          pointer-events: none;
-        }
-
-        .shape-1 {
-          width: 400px;
-          height: 400px;
-          background: linear-gradient(135deg, #667eea, #764ba2);
-          top: 5%;
-          left: 5%;
-          animation: float 12s ease-in-out infinite;
-        }
-
-        .shape-2 {
-          width: 500px;
-          height: 500px;
-          background: linear-gradient(135deg, #f093fb, #f5576c);
-          bottom: 5%;
-          right: 5%;
-          animation: float 15s ease-in-out infinite reverse;
-        }
-
-        .shape-3 {
-          width: 350px;
-          height: 350px;
-          background: linear-gradient(135deg, #4facfe, #00f2fe);
-          top: 50%;
-          left: 50%;
-          animation: float 18s ease-in-out infinite;
         }
 
         .header-section {
-          background: rgba(255, 255, 255, 0.9);
-          backdrop-filter: blur(30px) saturate(180%);
-          padding: 3rem 3.5rem;
-          border-radius: 28px;
-          box-shadow: 
-            0 20px 60px rgba(102, 126, 234, 0.12),
-            0 8px 30px rgba(102, 126, 234, 0.08),
-            inset 0 1px 0 rgba(255, 255, 255, 0.9);
-          margin-bottom: 3rem;
+          background: white;
+          padding: 1.5rem;
+          border-radius: 16px;
+          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+          margin-bottom: 1.5rem;
           text-align: center;
-          max-width: 950px;
+          max-width: 600px;
           width: 100%;
-          animation: slideInDown 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-          position: relative;
-          z-index: 1;
-          border: 1px solid rgba(102, 126, 234, 0.15);
-          overflow: hidden;
-        }
-
-        .header-section::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(102, 126, 234, 0.1),
-            transparent
-          );
-          animation: shimmer 4s infinite;
         }
 
         .header-icon {
-          font-size: 5rem;
-          margin-bottom: 1.5rem;
-          display: inline-block;
-          animation: float 4s ease-in-out infinite;
-          filter: drop-shadow(0 8px 20px rgba(102, 126, 234, 0.3));
+          font-size: 2.5rem;
+          margin-bottom: 0.75rem;
         }
 
         .dashboard-title {
-          font-size: 2.8rem;
-          margin-bottom: 1.2rem;
-          font-weight: 900;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-          background-size: 200% auto;
+          font-size: 1.5rem;
+          margin-bottom: 0.5rem;
+          font-weight: 800;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
-          background-clip: text;
-          letter-spacing: -1px;
         }
 
         .dashboard-subtitle {
-          font-size: 1.15rem;
-          color: #4a5568;
-          line-height: 1.7;
-          max-width: 700px;
-          margin: 0 auto;
+          font-size: 0.85rem;
+          color: #6b7280;
+          line-height: 1.5;
           font-weight: 500;
         }
 
         .stats-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-          gap: 1.5rem;
-          margin-top: 2.5rem;
-          width: 100%;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 0.75rem;
+          margin-top: 1rem;
         }
 
         .stat-card {
-          background: rgba(255, 255, 255, 0.7);
-          backdrop-filter: blur(20px);
-          padding: 1.75rem;
-          border-radius: 20px;
+          background: #fafbff;
+          padding: 0.75rem;
+          border-radius: 10px;
           text-align: center;
-          border: 2px solid rgba(102, 126, 234, 0.15);
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-          position: relative;
-          overflow: hidden;
-        }
-
-        .stat-card::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 3px;
-          background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
-          transform: translateX(-100%);
-          transition: transform 0.5s ease;
-        }
-
-        .stat-card:hover {
-          background: rgba(255, 255, 255, 0.95);
-          transform: translateY(-6px);
-          box-shadow: 0 12px 35px rgba(102, 126, 234, 0.2);
-          border-color: rgba(102, 126, 234, 0.3);
-        }
-
-        .stat-card:hover::before {
-          transform: translateX(0);
+          border: 1px solid #e5e7eb;
         }
 
         .stat-value {
-          font-size: 2.5rem;
+          font-size: 1.5rem;
           font-weight: 900;
           background: linear-gradient(135deg, #667eea, #764ba2);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
-          background-clip: text;
-          margin-bottom: 0.5rem;
+          margin-bottom: 0.25rem;
         }
 
         .stat-label {
-          font-size: 0.9rem;
-          color: #718096;
+          font-size: 0.65rem;
+          color: #6b7280;
           text-transform: uppercase;
-          letter-spacing: 1.5px;
+          letter-spacing: 0.5px;
           font-weight: 700;
         }
 
         .content-section {
           width: 100%;
-          max-width: 1400px;
-          z-index: 1;
-          position: relative;
+          max-width: 600px;
         }
 
         .tips-section {
-          margin-top: 3.5rem;
-          padding: 2.5rem;
-          background: rgba(255, 255, 255, 0.85);
-          backdrop-filter: blur(30px) saturate(180%);
-          border-radius: 24px;
-          border: 1px solid rgba(102, 126, 234, 0.15);
-          box-shadow: 0 10px 40px rgba(102, 126, 234, 0.1);
+          margin-top: 1.5rem;
+          padding: 1.25rem;
+          background: white;
+          border-radius: 16px;
+          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
         }
 
         .tips-title {
-          font-size: 1.8rem;
+          font-size: 1rem;
           font-weight: 800;
-          margin-bottom: 2rem;
+          margin-bottom: 1rem;
           background: linear-gradient(135deg, #667eea, #764ba2);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
-          background-clip: text;
         }
 
         .tips-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: 2rem;
+          gap: 0.75rem;
         }
 
         .tip-card {
-          padding: 2rem;
-          background: white;
-          border-radius: 18px;
-          border-left: 5px solid #667eea;
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: 0 4px 20px rgba(102, 126, 234, 0.08);
-          position: relative;
-          overflow: hidden;
-        }
-
-        .tip-card::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(240, 147, 251, 0.05));
-          opacity: 0;
-          transition: opacity 0.4s ease;
-        }
-
-        .tip-card:hover {
-          transform: translateX(10px) translateY(-5px);
-          box-shadow: 0 12px 40px rgba(102, 126, 234, 0.18);
-          border-left-color: #764ba2;
-        }
-
-        .tip-card:hover::before {
-          opacity: 1;
+          padding: 1rem;
+          background: #fafbff;
+          border-radius: 10px;
+          border-left: 3px solid #667eea;
+          display: flex;
+          gap: 0.75rem;
         }
 
         .tip-icon {
-          font-size: 2.8rem;
-          margin-bottom: 1rem;
-          filter: drop-shadow(0 4px 10px rgba(102, 126, 234, 0.2));
+          font-size: 1.5rem;
+          flex-shrink: 0;
+        }
+
+        .tip-content {
+          flex: 1;
         }
 
         .tip-title {
-          font-size: 1.2rem;
+          font-size: 0.85rem;
           font-weight: 700;
-          margin-bottom: 0.75rem;
-          color: #2d3748;
+          margin-bottom: 0.25rem;
+          color: #111827;
         }
 
         .tip-description {
-          font-size: 0.95rem;
-          color: #718096;
-          line-height: 1.7;
-          font-weight: 500;
+          font-size: 0.75rem;
+          color: #6b7280;
+          line-height: 1.4;
         }
 
-        @media (max-width: 768px) {
+        @media (min-width: 641px) {
           .dashboard-container {
-            padding: 5rem 1rem 2rem;
+            padding: 6rem 2rem 3rem;
           }
 
           .header-section {
-            padding: 2.5rem 2rem;
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 800px;
+          }
+
+          .header-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
           }
 
           .dashboard-title {
-            font-size: 2.2rem;
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
           }
 
           .dashboard-subtitle {
@@ -364,26 +169,68 @@ export default function Dashboard() {
           }
 
           .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+          }
+
+          .stat-card {
+            padding: 1.25rem;
+            border-radius: 12px;
+          }
+
+          .stat-value {
+            font-size: 2rem;
+          }
+
+          .stat-label {
+            font-size: 0.75rem;
+          }
+
+          .content-section {
+            max-width: 900px;
+          }
+
+          .tips-section {
+            padding: 2rem;
+            border-radius: 20px;
+            margin-top: 2.5rem;
+          }
+
+          .tips-title {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
           }
 
           .tips-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+          }
+
+          .tip-card {
+            padding: 1.5rem;
+            border-radius: 12px;
+          }
+
+          .tip-icon {
+            font-size: 2rem;
+          }
+
+          .tip-title {
+            font-size: 1rem;
+          }
+
+          .tip-description {
+            font-size: 0.85rem;
           }
         }
       `}</style>
 
       <div className="dashboard-container">
-        <div className="floating-shape shape-1"></div>
-        <div className="floating-shape shape-2"></div>
-        <div className="floating-shape shape-3"></div>
-
         <div className="header-section">
           <div className="header-icon">🐶</div>
-          <h1 className="dashboard-title">Dog Face Comparison System</h1>
+          <h1 className="dashboard-title">Dog Face Comparison</h1>
           <p className="dashboard-subtitle">
-            Advanced AI-powered facial recognition to compare dog muzzle and face images 
-            using deep learning embeddings and cosine similarity
+            AI-powered facial recognition to compare dog images using deep learning
           </p>
 
           <div className="stats-grid">
@@ -397,10 +244,9 @@ export default function Dashboard() {
             </div>
             <div className="stat-card">
               <div className="stat-value">&lt;3s</div>
-              <div className="stat-label">Processing</div>
+              <div className="stat-label">Speed</div>
             </div>
           </div>
-          
         </div>
 
         <div className="content-section">
@@ -411,30 +257,38 @@ export default function Dashboard() {
             <div className="tips-grid">
               <div className="tip-card">
                 <div className="tip-icon">📸</div>
-                <div className="tip-title">Clear Images</div>
-                <div className="tip-description">
-                  Use high-quality, well-lit photos with the dog's face clearly visible
+                <div className="tip-content">
+                  <div className="tip-title">Clear Images</div>
+                  <div className="tip-description">
+                    Use well-lit photos with clear visibility
+                  </div>
                 </div>
               </div>
               <div className="tip-card">
                 <div className="tip-icon">🎯</div>
-                <div className="tip-title">Proper Alignment</div>
-                <div className="tip-description">
-                  Ensure the muzzle and face images are from similar angles for better accuracy
+                <div className="tip-content">
+                  <div className="tip-title">Proper Alignment</div>
+                  <div className="tip-description">
+                    Similar angles improve accuracy
+                  </div>
                 </div>
               </div>
               <div className="tip-card">
                 <div className="tip-icon">🐾</div>
-                <div className="tip-title">Muzzle vs Face</div>
-                <div className="tip-description">
-                  Upload muzzle (nose area) and face (full frontal) images for each pair
+                <div className="tip-content">
+                  <div className="tip-title">Muzzle vs Face</div>
+                  <div className="tip-description">
+                    Upload nose area and full frontal face
+                  </div>
                 </div>
               </div>
               <div className="tip-card">
                 <div className="tip-icon">🖼️</div>
-                <div className="tip-title">Image Quality</div>
-                <div className="tip-description">
-                  JPG and PNG formats work best, avoid blurry or low-resolution images
+                <div className="tip-content">
+                  <div className="tip-title">Image Quality</div>
+                  <div className="tip-description">
+                    JPG and PNG work best, avoid blurry images
+                  </div>
                 </div>
               </div>
             </div>

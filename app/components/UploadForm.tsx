@@ -65,14 +65,11 @@ export default function FaceCompareForm() {
     face2: useRef<HTMLInputElement>(null),
   };
 
-  // Helper function to convert old API format to new format
   function normalizeResult(data: any): ComparisonResult {
-    // Check if it's the new format
     if (data.pair1 && data.pair1.similarity_score !== undefined) {
       return data;
     }
     
-    // Convert old format to new format
     const getMatchDetails = (similarity: number) => {
       const similarity_percent = similarity * 100;
       
@@ -130,12 +127,12 @@ export default function FaceCompareForm() {
       success: true,
       timestamp: new Date().toISOString(),
       pair1: {
-        label: "Pair 1: Muzzle ↔ Face",
+        label: "Pair 1",
         ...getMatchDetails(sim1)
       },
       pair2: {
         ...getMatchDetails(sim2),
-        label: "Pair 2: Muzzle ↔ Face"
+        label: "Pair 2"
       },
       analysis: {
         average_similarity: Math.round(avg * 10000) / 100,
@@ -145,7 +142,7 @@ export default function FaceCompareForm() {
       cross_comparison: {
         muzzle_similarity: 0,
         face_similarity: 0,
-        interpretation: "Cross-comparison not available in old API format"
+        interpretation: "Cross-comparison not available"
       },
       summary: {
         pair1_match: getMatchDetails(sim1).match_status,
@@ -159,13 +156,13 @@ export default function FaceCompareForm() {
     e.preventDefault();
     
     if (!API_BASE_URL) {
-      setError("API URL not configured. Please check your .env.local file");
+      setError("API URL not configured");
       setTimeout(() => setError(null), 3000);
       return;
     }
     
     if (!images.muzzle1 || !images.face1 || !images.muzzle2 || !images.face2) {
-      setError("Please upload all 4 images (2 muzzles + 2 faces)");
+      setError("Please upload all 4 images");
       setTimeout(() => setError(null), 3000);
       return;
     }
@@ -201,7 +198,7 @@ export default function FaceCompareForm() {
       setProgress(100);
 
       if (!res.ok) {
-        throw new Error("Comparison failed. Please try again.");
+        throw new Error("Comparison failed");
       }
 
       const data = await res.json();
@@ -273,646 +270,529 @@ export default function FaceCompareForm() {
   return (
     <>
       <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes scaleIn {
-          from {
-            opacity: 0;
-            transform: scale(0.95);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-
-        @keyframes shimmer {
-          0% {
-            transform: translateX(-100%);
-          }
-          100% {
-            transform: translateX(100%);
-          }
-        }
-
-        @keyframes spin {
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.5;
-          }
-        }
-
         .compare-card {
           background: white;
-          padding: 2.5rem;
-          border-radius: 24px;
-          box-shadow: 0 10px 40px rgba(100, 100, 255, 0.08),
-                      0 2px 15px rgba(100, 100, 255, 0.05);
-          max-width: 1200px;
+          padding: 1rem;
+          border-radius: 16px;
+          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+          max-width: 100%;
           width: 100%;
-          animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-          position: relative;
-          overflow: hidden;
-          border: 1px solid rgba(102, 126, 234, 0.1);
         }
 
-        .compare-card::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 3px;
-          background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(102, 126, 234, 0.6),
-            transparent
-          );
-          animation: shimmer 3s infinite;
-        }
-
-        .form-container {
-          display: flex;
-          flex-direction: column;
-          gap: 2rem;
-        }
-
-        .section-title {
-          font-size: 1.3rem;
-          font-weight: 700;
-          color: #2d3748;
-          margin-bottom: 1rem;
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-
-        .pairs-container {
+        .upload-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: 2rem;
-          margin-bottom: 1.5rem;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0.75rem;
+          margin-bottom: 1rem;
         }
 
-        .pair-section {
-          background: rgba(248, 250, 255, 0.5);
-          padding: 1.5rem;
-          border-radius: 20px;
-          border: 2px solid rgba(102, 126, 234, 0.15);
-        }
-
-        .pair-title {
-          font-size: 1.1rem;
-          font-weight: 700;
-          color: #667eea;
-          margin-bottom: 1.5rem;
-          text-align: center;
-        }
-
-        .upload-slots {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
+        .upload-item {
+          position: relative;
         }
 
         .upload-slot {
           position: relative;
-          border: 2px dashed rgba(102, 126, 234, 0.25);
-          padding: 1.5rem;
-          border-radius: 16px;
+          border: 1.5px dashed #e5e7eb;
+          border-radius: 12px;
           cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          background: white;
-          min-height: 180px;
+          transition: all 0.2s;
+          background: #fafafa;
+          aspect-ratio: 1;
           display: flex;
           align-items: center;
           justify-content: center;
+          overflow: hidden;
         }
 
         .upload-slot:hover {
-          border-color: rgba(102, 126, 234, 0.5);
-          background: rgba(102, 126, 234, 0.03);
-          transform: translateY(-2px);
-          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+          border-color: #667eea;
+          background: #f8f9ff;
+        }
+
+        .upload-slot:active {
+          transform: scale(0.98);
         }
 
         .upload-content {
           text-align: center;
-          width: 100%;
-        }
-
-        .upload-label {
-          font-size: 0.85rem;
-          font-weight: 600;
-          color: #667eea;
-          margin-bottom: 0.5rem;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
+          padding: 0.5rem;
         }
 
         .upload-icon {
-          font-size: 2.5rem;
-          margin-bottom: 0.5rem;
-          opacity: 0.7;
+          font-size: 1.5rem;
+          margin-bottom: 0.25rem;
+        }
+
+        .upload-label {
+          font-size: 0.65rem;
+          font-weight: 600;
+          color: #667eea;
+          text-transform: uppercase;
+          letter-spacing: 0.3px;
+          margin-bottom: 0.25rem;
         }
 
         .upload-text {
-          font-size: 0.9rem;
-          color: #4a5568;
-          font-weight: 600;
+          font-size: 0.7rem;
+          color: #6b7280;
+          font-weight: 500;
         }
 
         .preview-image {
           width: 100%;
-          max-height: 160px;
-          object-fit: contain;
-          border-radius: 12px;
-          animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          height: 100%;
+          object-fit: cover;
+          border-radius: 10px;
         }
 
-        .image-name {
-          font-size: 0.75rem;
-          color: #718096;
-          margin-top: 0.5rem;
+        .image-badge {
+          position: absolute;
+          top: 4px;
+          left: 4px;
+          background: rgba(102, 126, 234, 0.9);
+          color: white;
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-size: 0.6rem;
           font-weight: 600;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
+          z-index: 1;
+        }
+
+        .pair-divider {
+          grid-column: 1 / -1;
+          height: 1px;
+          background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+          margin: 0.5rem 0;
         }
 
         .button-group {
           display: flex;
-          gap: 1rem;
-          flex-wrap: wrap;
+          gap: 0.5rem;
+          margin-top: 1rem;
         }
 
         .btn {
           flex: 1;
-          min-width: 160px;
-          padding: 1.1rem 2rem;
-          border-radius: 16px;
+          padding: 0.75rem;
+          border-radius: 10px;
           border: none;
-          font-size: 1rem;
+          font-size: 0.85rem;
           font-weight: 700;
           cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          position: relative;
-          overflow: hidden;
+          transition: all 0.2s;
         }
 
         .btn-primary {
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           color: white;
-          box-shadow: 0 6px 25px rgba(102, 126, 234, 0.3),
-                      0 2px 10px rgba(102, 126, 234, 0.2);
+          box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
 
         .btn-primary:hover:not(:disabled) {
-          transform: translateY(-3px);
-          box-shadow: 0 10px 35px rgba(102, 126, 234, 0.4),
-                      0 4px 15px rgba(102, 126, 234, 0.25);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
 
         .btn-primary:disabled {
-          opacity: 0.7;
+          opacity: 0.6;
           cursor: not-allowed;
         }
 
         .btn-secondary {
           background: white;
           color: #667eea;
-          border: 2px solid rgba(102, 126, 234, 0.3);
+          border: 1.5px solid #e5e7eb;
         }
 
         .btn-secondary:hover {
-          background: rgba(102, 126, 234, 0.05);
-          border-color: rgba(102, 126, 234, 0.5);
-          transform: translateY(-2px);
+          background: #f8f9ff;
+          border-color: #667eea;
         }
 
         .loading-spinner {
           display: inline-block;
-          width: 20px;
-          height: 20px;
-          border: 3px solid rgba(255, 255, 255, 0.3);
+          width: 14px;
+          height: 14px;
+          border: 2px solid rgba(255, 255, 255, 0.3);
           border-radius: 50%;
           border-top-color: white;
-          animation: spin 0.8s linear infinite;
-          margin-right: 0.5rem;
+          animation: spin 0.6s linear infinite;
+          margin-right: 0.4rem;
+        }
+
+        @keyframes spin {
+          to { transform: rotate(360deg); }
         }
 
         .progress-bar {
           width: 100%;
-          height: 6px;
-          background: rgba(102, 126, 234, 0.1);
+          height: 3px;
+          background: #f3f4f6;
           border-radius: 10px;
           overflow: hidden;
+          margin-top: 0.5rem;
         }
 
         .progress-fill {
           height: 100%;
-          background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
-          background-size: 200% 100%;
+          background: linear-gradient(90deg, #667eea, #764ba2);
           transition: width 0.3s ease;
           width: ${progress}%;
-          box-shadow: 0 0 15px rgba(102, 126, 234, 0.5);
-          animation: shimmer 2s infinite;
+        }
+
+        .error-message {
+          padding: 0.75rem;
+          background: #fef2f2;
+          border: 1px solid #fecaca;
+          border-radius: 8px;
+          color: #dc2626;
+          font-size: 0.8rem;
+          font-weight: 600;
+          margin-top: 0.5rem;
         }
 
         .result-card {
-          margin-top: 2rem;
-          padding: 0;
-          animation: scaleIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+          margin-top: 1.5rem;
         }
 
         .result-title {
-          font-size: 1.8rem;
-          margin-bottom: 2rem;
+          font-size: 1.1rem;
+          margin-bottom: 1rem;
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
-          background-clip: text;
           font-weight: 800;
           text-align: center;
         }
 
         .results-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-          gap: 2rem;
-          margin-bottom: 2rem;
+          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+          gap: 0.75rem;
+          margin-bottom: 1rem;
         }
 
         .result-item {
-          padding: 2rem;
+          padding: 1rem;
           background: white;
-          border-radius: 20px;
-          box-shadow: 0 4px 20px rgba(102, 126, 234, 0.08);
-          transition: all 0.3s ease;
-          position: relative;
-          overflow: hidden;
-          border: 2px solid rgba(102, 126, 234, 0.1);
-        }
-
-        .result-item:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 8px 30px rgba(102, 126, 234, 0.15);
+          border-radius: 12px;
+          box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+          border: 1px solid #f3f4f6;
         }
 
         .result-label {
           font-weight: 700;
-          color: #4a5568;
-          font-size: 1.15rem;
-          margin-bottom: 1.5rem;
-          text-align: center;
-        }
-
-        .similarity-display {
+          color: #374151;
+          font-size: 0.75rem;
+          margin-bottom: 0.75rem;
           text-align: center;
         }
 
         .similarity-value {
-          font-size: 3.5rem;
+          font-size: 2rem;
           font-weight: 900;
+          text-align: center;
           margin-bottom: 0.5rem;
-          animation: scaleIn 0.6s ease;
         }
 
         .match-badge {
           display: inline-block;
-          padding: 0.6rem 1.5rem;
-          border-radius: 12px;
-          font-size: 1rem;
+          padding: 0.35rem 0.75rem;
+          border-radius: 6px;
+          font-size: 0.7rem;
           font-weight: 700;
-          margin: 1rem 0;
+          margin: 0.5rem 0;
         }
 
         .confidence-badge {
           display: inline-block;
-          padding: 0.4rem 1rem;
-          border-radius: 8px;
-          font-size: 0.85rem;
+          padding: 0.25rem 0.6rem;
+          border-radius: 5px;
+          font-size: 0.65rem;
           font-weight: 600;
-          margin-top: 0.5rem;
+          margin-top: 0.25rem;
         }
 
         .similarity-bar {
           width: 100%;
-          height: 12px;
-          background: rgba(102, 126, 234, 0.1);
+          height: 6px;
+          background: #f3f4f6;
           border-radius: 10px;
           overflow: hidden;
-          margin-top: 1.5rem;
+          margin-top: 0.75rem;
         }
 
         .similarity-bar-fill {
           height: 100%;
           border-radius: 10px;
-          transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: 0 0 10px currentColor;
+          transition: width 0.5s ease;
         }
 
         .detail-row {
           display: flex;
           justify-content: space-between;
-          align-items: center;
-          padding: 0.8rem 0;
-          border-bottom: 1px solid rgba(102, 126, 234, 0.1);
-        }
-
-        .detail-row:last-child {
-          border-bottom: none;
+          padding: 0.5rem 0;
+          border-bottom: 1px solid #f3f4f6;
+          font-size: 0.75rem;
         }
 
         .detail-label {
-          font-size: 0.9rem;
-          color: #718096;
+          color: #6b7280;
           font-weight: 600;
         }
 
         .detail-value {
-          font-size: 0.95rem;
-          color: #2d3748;
+          color: #111827;
           font-weight: 700;
         }
 
         .recommendation-box {
-          margin-top: 1.5rem;
-          padding: 1.2rem;
-          background: rgba(102, 126, 234, 0.05);
-          border-left: 4px solid #667eea;
-          border-radius: 10px;
+          margin-top: 0.75rem;
+          padding: 0.75rem;
+          background: #f8f9ff;
+          border-left: 3px solid #667eea;
+          border-radius: 6px;
         }
 
         .recommendation-text {
-          font-size: 0.95rem;
-          color: #4a5568;
+          font-size: 0.75rem;
+          color: #374151;
           font-weight: 600;
-          line-height: 1.6;
+          line-height: 1.4;
         }
 
         .analysis-section {
-          background: linear-gradient(135deg, rgba(102, 126, 234, 0.03) 0%, rgba(240, 147, 251, 0.03) 100%);
-          padding: 2rem;
-          border-radius: 20px;
-          border: 2px solid rgba(102, 126, 234, 0.15);
-          margin-top: 2rem;
+          background: #fafbff;
+          padding: 1rem;
+          border-radius: 12px;
+          border: 1px solid #e5e7eb;
+          margin-top: 1rem;
         }
 
         .analysis-title {
-          font-size: 1.4rem;
+          font-size: 0.9rem;
           font-weight: 800;
-          color: #2d3748;
-          margin-bottom: 1.5rem;
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
+          color: #111827;
+          margin-bottom: 0.75rem;
         }
 
         .analysis-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 1.5rem;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0.5rem;
         }
 
         .analysis-card {
           background: white;
-          padding: 1.5rem;
-          border-radius: 16px;
-          box-shadow: 0 2px 10px rgba(102, 126, 234, 0.05);
+          padding: 0.75rem;
+          border-radius: 8px;
+          border: 1px solid #f3f4f6;
         }
 
         .analysis-card-title {
-          font-size: 0.85rem;
-          color: #718096;
+          font-size: 0.65rem;
+          color: #6b7280;
           font-weight: 600;
           text-transform: uppercase;
-          letter-spacing: 0.5px;
-          margin-bottom: 0.75rem;
+          letter-spacing: 0.3px;
+          margin-bottom: 0.4rem;
         }
 
         .analysis-card-value {
-          font-size: 2rem;
+          font-size: 1.3rem;
           font-weight: 900;
           background: linear-gradient(135deg, #667eea, #764ba2);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
-          background-clip: text;
         }
 
-        .cross-comparison {
-          background: white;
-          padding: 2rem;
-          border-radius: 20px;
-          margin-top: 2rem;
-          border: 2px solid rgba(102, 126, 234, 0.15);
-        }
-
-        .cross-title {
-          font-size: 1.3rem;
-          font-weight: 700;
-          color: #2d3748;
-          margin-bottom: 1.5rem;
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-
-        .error-message {
-          padding: 1.2rem;
-          background: rgba(248, 113, 113, 0.08);
-          border: 2px solid rgba(239, 68, 68, 0.3);
-          border-radius: 14px;
-          color: #dc2626;
-          animation: scaleIn 0.3s ease;
-          font-weight: 600;
-        }
-
-        @media (max-width: 768px) {
+        @media (max-width: 640px) {
           .compare-card {
-            padding: 1.75rem;
+            padding: 0.75rem;
+            border-radius: 12px;
           }
 
-          .pairs-container {
-            grid-template-columns: 1fr;
+          .upload-grid {
+            gap: 0.5rem;
           }
 
-          .button-group {
-            flex-direction: column;
+          .upload-icon {
+            font-size: 1.2rem;
+          }
+
+          .upload-label {
+            font-size: 0.6rem;
+          }
+
+          .upload-text {
+            font-size: 0.65rem;
           }
 
           .btn {
-            width: 100%;
+            padding: 0.65rem;
+            font-size: 0.8rem;
+          }
+
+          .similarity-value {
+            font-size: 1.75rem;
           }
 
           .results-grid {
             grid-template-columns: 1fr;
           }
+
+          .analysis-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        @media (min-width: 641px) {
+          .compare-card {
+            padding: 1.5rem;
+          }
+
+          .upload-grid {
+            grid-template-columns: repeat(4, 1fr);
+            max-width: 600px;
+            margin: 0 auto;
+          }
+
+          .pair-divider {
+            display: none;
+          }
         }
       `}</style>
 
       <div className="compare-card">
-        <form onSubmit={handleSubmit} className="form-container">
-          <div className="section-title">
-            📸 Upload Images for Comparison
-          </div>
-
-          <div className="pairs-container">
-            {/* Pair 1 */}
-            <div className="pair-section">
-              <div className="pair-title">🐕 Pair 1</div>
-              <div className="upload-slots">
-                {/* Muzzle 1 */}
-                <div
-                  className="upload-slot"
-                  onDragEnter={handleDrag}
-                  onDragLeave={handleDrag}
-                  onDragOver={handleDrag}
-                  onDrop={(e) => handleDrop("muzzle1", e)}
-                  onClick={() => fileInputRefs.muzzle1.current?.click()}
-                >
-                  {previews.muzzle1 ? (
-                    <div className="upload-content">
-                      <img src={previews.muzzle1} alt="muzzle 1" className="preview-image" />
-                      {images.muzzle1 && (
-                        <div className="image-name">{images.muzzle1.name}</div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="upload-content">
-                      <div className="upload-label">Muzzle</div>
-                      <div className="upload-icon">🐾</div>
-                      <div className="upload-text">Click or drag muzzle image</div>
-                    </div>
-                  )}
-                  <input
-                    ref={fileInputRefs.muzzle1}
-                    type="file"
-                    hidden
-                    onChange={(e) => handleImageChange("muzzle1", e)}
-                    accept="image/*"
-                  />
-                </div>
-
-                {/* Face 1 */}
-                <div
-                  className="upload-slot"
-                  onDragEnter={handleDrag}
-                  onDragLeave={handleDrag}
-                  onDragOver={handleDrag}
-                  onDrop={(e) => handleDrop("face1", e)}
-                  onClick={() => fileInputRefs.face1.current?.click()}
-                >
-                  {previews.face1 ? (
-                    <div className="upload-content">
-                      <img src={previews.face1} alt="face 1" className="preview-image" />
-                      {images.face1 && (
-                        <div className="image-name">{images.face1.name}</div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="upload-content">
-                      <div className="upload-label">Face</div>
-                      <div className="upload-icon">🦴</div>
-                      <div className="upload-text">Click or drag face image</div>
-                    </div>
-                  )}
-                  <input
-                    ref={fileInputRefs.face1}
-                    type="file"
-                    hidden
-                    onChange={(e) => handleImageChange("face1", e)}
-                    accept="image/*"
-                  />
-                </div>
+        <form onSubmit={handleSubmit}>
+          <div className="upload-grid">
+            {/* Pair 1 - Muzzle */}
+            <div className="upload-item">
+              <div
+                className="upload-slot"
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={(e) => handleDrop("muzzle1", e)}
+                onClick={() => fileInputRefs.muzzle1.current?.click()}
+              >
+                {previews.muzzle1 ? (
+                  <>
+                    <div className="image-badge">P1 🐾</div>
+                    <img src={previews.muzzle1} alt="muzzle 1" className="preview-image" />
+                  </>
+                ) : (
+                  <div className="upload-content">
+                    <div className="upload-icon">🐾</div>
+                    <div className="upload-label">Pair 1</div>
+                    <div className="upload-text">Muzzle</div>
+                  </div>
+                )}
+                <input
+                  ref={fileInputRefs.muzzle1}
+                  type="file"
+                  hidden
+                  onChange={(e) => handleImageChange("muzzle1", e)}
+                  accept="image/*"
+                />
               </div>
             </div>
 
-            {/* Pair 2 */}
-            <div className="pair-section">
-              <div className="pair-title">🐕 Pair 2</div>
-              <div className="upload-slots">
-                {/* Muzzle 2 */}
-                <div
-                  className="upload-slot"
-                  onDragEnter={handleDrag}
-                  onDragLeave={handleDrag}
-                  onDragOver={handleDrag}
-                  onDrop={(e) => handleDrop("muzzle2", e)}
-                  onClick={() => fileInputRefs.muzzle2.current?.click()}
-                >
-                  {previews.muzzle2 ? (
-                    <div className="upload-content">
-                      <img src={previews.muzzle2} alt="muzzle 2" className="preview-image" />
-                      {images.muzzle2 && (
-                        <div className="image-name">{images.muzzle2.name}</div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="upload-content">
-                      <div className="upload-label">Muzzle</div>
-                      <div className="upload-icon">🐾</div>
-                      <div className="upload-text">Click or drag muzzle image</div>
-                    </div>
-                  )}
-                  <input
-                    ref={fileInputRefs.muzzle2}
-                    type="file"
-                    hidden
-                    onChange={(e) => handleImageChange("muzzle2", e)}
-                    accept="image/*"
-                  />
-                </div>
+            {/* Pair 1 - Face */}
+            <div className="upload-item">
+              <div
+                className="upload-slot"
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={(e) => handleDrop("face1", e)}
+                onClick={() => fileInputRefs.face1.current?.click()}
+              >
+                {previews.face1 ? (
+                  <>
+                    <div className="image-badge">P1 🦴</div>
+                    <img src={previews.face1} alt="face 1" className="preview-image" />
+                  </>
+                ) : (
+                  <div className="upload-content">
+                    <div className="upload-icon">🦴</div>
+                    <div className="upload-label">Pair 1</div>
+                    <div className="upload-text">Face</div>
+                  </div>
+                )}
+                <input
+                  ref={fileInputRefs.face1}
+                  type="file"
+                  hidden
+                  onChange={(e) => handleImageChange("face1", e)}
+                  accept="image/*"
+                />
+              </div>
+            </div>
 
-                {/* Face 2 */}
-                <div
-                  className="upload-slot"
-                  onDragEnter={handleDrag}
-                  onDragLeave={handleDrag}
-                  onDragOver={handleDrag}
-                  onDrop={(e) => handleDrop("face2", e)}
-                  onClick={() => fileInputRefs.face2.current?.click()}
-                >
-                  {previews.face2 ? (
-                    <div className="upload-content">
-                      <img src={previews.face2} alt="face 2" className="preview-image" />
-                      {images.face2 && (
-                        <div className="image-name">{images.face2.name}</div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="upload-content">
-                      <div className="upload-label">Face</div>
-                      <div className="upload-icon">🦴</div>
-                      <div className="upload-text">Click or drag face image</div>
-                    </div>
-                  )}
-                  <input
-                    ref={fileInputRefs.face2}
-                    type="file"
-                    hidden
-                    onChange={(e) => handleImageChange("face2", e)}
-                    accept="image/*"
-                  />
-                </div>
+            <div className="pair-divider"></div>
+
+            {/* Pair 2 - Muzzle */}
+            <div className="upload-item">
+              <div
+                className="upload-slot"
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={(e) => handleDrop("muzzle2", e)}
+                onClick={() => fileInputRefs.muzzle2.current?.click()}
+              >
+                {previews.muzzle2 ? (
+                  <>
+                    <div className="image-badge">P2 🐾</div>
+                    <img src={previews.muzzle2} alt="muzzle 2" className="preview-image" />
+                  </>
+                ) : (
+                  <div className="upload-content">
+                    <div className="upload-icon">🐾</div>
+                    <div className="upload-label">Pair 2</div>
+                    <div className="upload-text">Muzzle</div>
+                  </div>
+                )}
+                <input
+                  ref={fileInputRefs.muzzle2}
+                  type="file"
+                  hidden
+                  onChange={(e) => handleImageChange("muzzle2", e)}
+                  accept="image/*"
+                />
+              </div>
+            </div>
+
+            {/* Pair 2 - Face */}
+            <div className="upload-item">
+              <div
+                className="upload-slot"
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={(e) => handleDrop("face2", e)}
+                onClick={() => fileInputRefs.face2.current?.click()}
+              >
+                {previews.face2 ? (
+                  <>
+                    <div className="image-badge">P2 🦴</div>
+                    <img src={previews.face2} alt="face 2" className="preview-image" />
+                  </>
+                ) : (
+                  <div className="upload-content">
+                    <div className="upload-icon">🦴</div>
+                    <div className="upload-label">Pair 2</div>
+                    <div className="upload-text">Face</div>
+                  </div>
+                )}
+                <input
+                  ref={fileInputRefs.face2}
+                  type="file"
+                  hidden
+                  onChange={(e) => handleImageChange("face2", e)}
+                  accept="image/*"
+                />
               </div>
             </div>
           </div>
@@ -925,7 +805,7 @@ export default function FaceCompareForm() {
                 onClick={clearAll}
                 disabled={loading}
               >
-                🔄 Clear All
+                Clear
               </button>
             )}
             <button
@@ -939,7 +819,7 @@ export default function FaceCompareForm() {
                   Analyzing...
                 </>
               ) : (
-                "🔍 Compare Faces"
+                "Compare"
               )}
             </button>
           </div>
@@ -955,59 +835,39 @@ export default function FaceCompareForm() {
 
         {result && result.pair1 && result.pair2 && (
           <div className="result-card">
-            <h3 className="result-title">🎯 Detailed Comparison Results</h3>
+            <h3 className="result-title">Results</h3>
             
             <div className="results-grid">
               {/* Pair 1 Result */}
               <div className="result-item">
                 <div className="result-label">{result.pair1.label}</div>
-                <div className="similarity-display">
+                <div 
+                  className="similarity-value"
+                  style={{ color: result.pair1.color }}
+                >
+                  {result.pair1.similarity_percentage}%
+                </div>
+                <div 
+                  className="match-badge"
+                  style={{ 
+                    backgroundColor: `${result.pair1.color}20`,
+                    color: result.pair1.color
+                  }}
+                >
+                  {result.pair1.match_status}
+                </div>
+                <div className="similarity-bar">
                   <div 
-                    className="similarity-value"
-                    style={{ color: result.pair1.color }}
-                  >
-                    {result.pair1.similarity_percentage}%
-                  </div>
-                  <div 
-                    className="match-badge"
+                    className="similarity-bar-fill"
                     style={{ 
-                      backgroundColor: `${result.pair1.color}20`,
-                      color: result.pair1.color
+                      width: `${result.pair1.similarity_percentage}%`,
+                      backgroundColor: result.pair1.color
                     }}
-                  >
-                    {result.pair1.match_status}
-                  </div>
-                  <div 
-                    className="confidence-badge"
-                    style={{ 
-                      backgroundColor: `${result.pair1.color}15`,
-                      color: result.pair1.color
-                    }}
-                  >
-                    Confidence: {result.pair1.confidence_level}
-                  </div>
-                  <div className="similarity-bar">
-                    <div 
-                      className="similarity-bar-fill"
-                      style={{ 
-                        width: `${result.pair1.similarity_percentage}%`,
-                        backgroundColor: result.pair1.color,
-                        color: result.pair1.color
-                      }}
-                    />
-                  </div>
-                  
-                  <div style={{ marginTop: '1.5rem' }}>
-                    <div className="detail-row">
-                      <span className="detail-label">Raw Score</span>
-                      <span className="detail-value">{result.pair1.similarity_score.toFixed(6)}</span>
-                    </div>
-                  </div>
-
-                  <div className="recommendation-box">
-                    <div className="recommendation-text">
-                      💡 {result.pair1.recommendation}
-                    </div>
+                  />
+                </div>
+                <div className="recommendation-box">
+                  <div className="recommendation-text">
+                    {result.pair1.recommendation}
                   </div>
                 </div>
               </div>
@@ -1015,53 +875,33 @@ export default function FaceCompareForm() {
               {/* Pair 2 Result */}
               <div className="result-item">
                 <div className="result-label">{result.pair2.label}</div>
-                <div className="similarity-display">
+                <div 
+                  className="similarity-value"
+                  style={{ color: result.pair2.color }}
+                >
+                  {result.pair2.similarity_percentage}%
+                </div>
+                <div 
+                  className="match-badge"
+                  style={{ 
+                    backgroundColor: `${result.pair2.color}20`,
+                    color: result.pair2.color
+                  }}
+                >
+                  {result.pair2.match_status}
+                </div>
+                <div className="similarity-bar">
                   <div 
-                    className="similarity-value"
-                    style={{ color: result.pair2.color }}
-                  >
-                    {result.pair2.similarity_percentage}%
-                  </div>
-                  <div 
-                    className="match-badge"
+                    className="similarity-bar-fill"
                     style={{ 
-                      backgroundColor: `${result.pair2.color}20`,
-                      color: result.pair2.color
+                      width: `${result.pair2.similarity_percentage}%`,
+                      backgroundColor: result.pair2.color
                     }}
-                  >
-                    {result.pair2.match_status}
-                  </div>
-                  <div 
-                    className="confidence-badge"
-                    style={{ 
-                      backgroundColor: `${result.pair2.color}15`,
-                      color: result.pair2.color
-                    }}
-                  >
-                    Confidence: {result.pair2.confidence_level}
-                  </div>
-                  <div className="similarity-bar">
-                    <div 
-                      className="similarity-bar-fill"
-                      style={{ 
-                        width: `${result.pair2.similarity_percentage}%`,
-                        backgroundColor: result.pair2.color,
-                        color: result.pair2.color
-                      }}
-                    />
-                  </div>
-                  
-                  <div style={{ marginTop: '1.5rem' }}>
-                    <div className="detail-row">
-                      <span className="detail-label">Raw Score</span>
-                      <span className="detail-value">{result.pair2.similarity_score.toFixed(6)}</span>
-                    </div>
-                  </div>
-
-                  <div className="recommendation-box">
-                    <div className="recommendation-text">
-                      💡 {result.pair2.recommendation}
-                    </div>
+                  />
+                </div>
+                <div className="recommendation-box">
+                  <div className="recommendation-text">
+                    {result.pair2.recommendation}
                   </div>
                 </div>
               </div>
@@ -1070,10 +910,10 @@ export default function FaceCompareForm() {
             {/* Overall Analysis */}
             {result.analysis && (
               <div className="analysis-section">
-                <div className="analysis-title">📊 Overall Analysis</div>
+                <div className="analysis-title">Analysis</div>
                 <div className="analysis-grid">
                   <div className="analysis-card">
-                    <div className="analysis-card-title">Average Similarity</div>
+                    <div className="analysis-card-title">Average</div>
                     <div className="analysis-card-value">{result.analysis.average_similarity}%</div>
                   </div>
                   <div className="analysis-card">
@@ -1081,35 +921,15 @@ export default function FaceCompareForm() {
                     <div className="analysis-card-value">{result.analysis.consistency}</div>
                   </div>
                   <div className="analysis-card">
-                    <div className="analysis-card-title">Score Difference</div>
+                    <div className="analysis-card-title">Difference</div>
                     <div className="analysis-card-value">{result.analysis.similarity_difference}%</div>
                   </div>
                   {result.summary && (
                     <div className="analysis-card">
-                      <div className="analysis-card-title">Overall Confidence</div>
+                      <div className="analysis-card-title">Confidence</div>
                       <div className="analysis-card-value">{result.summary.overall_confidence}</div>
                     </div>
                   )}
-                </div>
-              </div>
-            )}
-
-            {/* Cross Comparison */}
-            {result.cross_comparison && result.cross_comparison.muzzle_similarity > 0 && (
-              <div className="cross-comparison">
-                <div className="cross-title">🔄 Cross-Pair Comparison</div>
-                <div className="detail-row">
-                  <span className="detail-label">Muzzle 1 vs Muzzle 2</span>
-                  <span className="detail-value">{result.cross_comparison.muzzle_similarity}%</span>
-                </div>
-                <div className="detail-row">
-                  <span className="detail-label">Face 1 vs Face 2</span>
-                  <span className="detail-value">{result.cross_comparison.face_similarity}%</span>
-                </div>
-                <div className="recommendation-box">
-                  <div className="recommendation-text">
-                    🔍 {result.cross_comparison.interpretation}
-                  </div>
                 </div>
               </div>
             )}

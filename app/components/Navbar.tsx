@@ -18,43 +18,18 @@ export default function Navbar() {
   return (
     <>
       <style jsx>{`
-        @keyframes slideDown {
-          from {
-            transform: translateY(-100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-
-        @keyframes shimmer {
-          0% {
-            background-position: -200% center;
-          }
-          100% {
-            background-position: 200% center;
-          }
-        }
-
         .nav-container {
           position: fixed;
           top: 0;
           left: 0;
           right: 0;
           z-index: 1000;
-          padding: 1rem 2rem;
-          background: ${scrolled
-            ? "rgba(255, 255, 255, 0.95)"
-            : "rgba(255, 255, 255, 0.85)"};
-          backdrop-filter: blur(20px) saturate(180%);
-          border-bottom: 1px solid rgba(100, 100, 255, 0.15);
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-          animation: slideDown 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: ${scrolled
-            ? "0 4px 30px rgba(100, 100, 255, 0.1)"
-            : "0 2px 20px rgba(100, 100, 255, 0.05)"};
+          padding: 0.75rem 1rem;
+          background: ${scrolled ? "rgba(255, 255, 255, 0.98)" : "rgba(255, 255, 255, 0.9)"};
+          backdrop-filter: blur(20px);
+          border-bottom: 1px solid ${scrolled ? "#e5e7eb" : "rgba(229, 231, 235, 0.5)"};
+          transition: all 0.3s;
+          box-shadow: ${scrolled ? "0 2px 8px rgba(0, 0, 0, 0.06)" : "none"};
         }
 
         .nav-content {
@@ -66,97 +41,55 @@ export default function Navbar() {
         }
 
         .logo {
-          font-size: 1.6rem;
+          font-size: 1.15rem;
           font-weight: 900;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-          background-size: 200% auto;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
-          background-clip: text;
-          letter-spacing: -0.5px;
-          transition: all 0.4s ease;
-          cursor: pointer;
-        }
-
-        .logo:hover {
-          transform: scale(1.05);
-          background-position: right center;
+          letter-spacing: -0.3px;
         }
 
         .nav-links {
           display: flex;
-          gap: 0.75rem;
-          align-items: center;
+          gap: 0.5rem;
         }
 
         .nav-link {
-          position: relative;
-          padding: 0.85rem 1.75rem;
-          color: #4a5568;
+          padding: 0.5rem 1rem;
+          color: #6b7280;
           font-weight: 600;
-          font-size: 0.95rem;
-          border-radius: 14px;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          overflow: hidden;
-          background: transparent;
-        }
-
-        .nav-link::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          opacity: 0;
-          transition: opacity 0.3s ease;
-          z-index: -1;
-          border-radius: 14px;
+          font-size: 0.85rem;
+          border-radius: 50px;
+          transition: all 0.2s;
         }
 
         .nav-link:hover {
           color: #667eea;
-          transform: translateY(-2px);
-          background: rgba(102, 126, 234, 0.08);
-        }
-
-        .nav-link:hover::before {
-          opacity: 0.1;
+          background: #f8f9ff;
         }
 
         .nav-link.active {
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           color: white;
-          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3),
-                      0 2px 10px rgba(102, 126, 234, 0.2);
+          box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
 
-        .nav-link.active::after {
-          content: "";
-          position: absolute;
-          bottom: 10px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 5px;
-          height: 5px;
-          background: white;
-          border-radius: 50%;
-          box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-        }
-
-        @media (max-width: 640px) {
+        @media (min-width: 641px) {
           .nav-container {
-            padding: 0.75rem 1rem;
+            padding: 1rem 2rem;
           }
 
           .logo {
-            font-size: 1.35rem;
+            font-size: 1.4rem;
+          }
+
+          .nav-links {
+            gap: 0.75rem;
           }
 
           .nav-link {
-            padding: 0.7rem 1.2rem;
-            font-size: 0.875rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem;
           }
         }
       `}</style>
