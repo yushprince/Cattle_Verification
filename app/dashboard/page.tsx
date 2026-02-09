@@ -1,5 +1,5 @@
 "use client";
-import UploadForm from "../components/UploadForm";
+import FaceCompareForm from "../components/UploadForm";
 import { useEffect, useState } from "react";
 
 export default function Dashboard() {
@@ -145,7 +145,7 @@ export default function Dashboard() {
             inset 0 1px 0 rgba(255, 255, 255, 0.9);
           margin-bottom: 3rem;
           text-align: center;
-          max-width: 850px;
+          max-width: 950px;
           width: 100%;
           animation: slideInDown 0.8s cubic-bezier(0.4, 0, 0.2, 1);
           position: relative;
@@ -194,7 +194,7 @@ export default function Dashboard() {
           font-size: 1.15rem;
           color: #4a5568;
           line-height: 1.7;
-          max-width: 650px;
+          max-width: 700px;
           margin: 0 auto;
           font-weight: 500;
         }
@@ -262,7 +262,7 @@ export default function Dashboard() {
 
         .content-section {
           width: 100%;
-          max-width: 1200px;
+          max-width: 1400px;
           z-index: 1;
           position: relative;
         }
@@ -289,7 +289,7 @@ export default function Dashboard() {
 
         .tips-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
           gap: 2rem;
         }
 
@@ -379,55 +379,62 @@ export default function Dashboard() {
         <div className="floating-shape shape-3"></div>
 
         <div className="header-section">
-          <div className="header-icon">🤖</div>
-          <h1 className="dashboard-title">AI Prediction Dashboard</h1>
+          <div className="header-icon">🐶</div>
+          <h1 className="dashboard-title">Dog Face Comparison System</h1>
           <p className="dashboard-subtitle">
-            Harness the power of deep learning to analyze and classify images
-            with state-of-the-art neural networks
+            Advanced AI-powered facial recognition to compare dog muzzle and face images 
+            using deep learning embeddings and cosine similarity
           </p>
 
           <div className="stats-grid">
             <div className="stat-card">
               <div className="stat-value">2</div>
-              <div className="stat-label">Models</div>
+              <div className="stat-label">Pairs</div>
             </div>
             <div className="stat-card">
-              <div className="stat-value">95%</div>
-              <div className="stat-label">Accuracy</div>
+              <div className="stat-value">4</div>
+              <div className="stat-label">Images</div>
             </div>
             <div className="stat-card">
-              <div className="stat-value">&lt;2s</div>
-              <div className="stat-label">Response</div>
+              <div className="stat-value">&lt;3s</div>
+              <div className="stat-label">Processing</div>
             </div>
           </div>
           
         </div>
-<UploadForm />
+
         <div className="content-section">
-          
+          <FaceCompareForm />
 
           <div className="tips-section">
             <h2 className="tips-title">💡 Tips for Best Results</h2>
             <div className="tips-grid">
               <div className="tip-card">
                 <div className="tip-icon">📸</div>
-                <div className="tip-title">Quality Matters</div>
+                <div className="tip-title">Clear Images</div>
                 <div className="tip-description">
-                  Use clear, well-lit images for the most accurate predictions
+                  Use high-quality, well-lit photos with the dog's face clearly visible
                 </div>
               </div>
               <div className="tip-card">
                 <div className="tip-icon">🎯</div>
-                <div className="tip-title">Center Your Subject</div>
+                <div className="tip-title">Proper Alignment</div>
                 <div className="tip-description">
-                  Make sure the main object is centered and clearly visible
+                  Ensure the muzzle and face images are from similar angles for better accuracy
+                </div>
+              </div>
+              <div className="tip-card">
+                <div className="tip-icon">🐾</div>
+                <div className="tip-title">Muzzle vs Face</div>
+                <div className="tip-description">
+                  Upload muzzle (nose area) and face (full frontal) images for each pair
                 </div>
               </div>
               <div className="tip-card">
                 <div className="tip-icon">🖼️</div>
-                <div className="tip-title">Optimal Format</div>
+                <div className="tip-title">Image Quality</div>
                 <div className="tip-description">
-                  JPG and PNG formats work best, keep files under 10MB
+                  JPG and PNG formats work best, avoid blurry or low-resolution images
                 </div>
               </div>
             </div>
