@@ -252,47 +252,7 @@ export default function Dashboard() {
         <div className="content-section">
           <FaceCompareForm />
 
-          <div className="tips-section">
-            <h2 className="tips-title">💡 Tips for Best Results</h2>
-            <div className="tips-grid">
-              <div className="tip-card">
-                <div className="tip-icon">📸</div>
-                <div className="tip-content">
-                  <div className="tip-title">Clear Images</div>
-                  <div className="tip-description">
-                    Use well-lit photos with clear visibility
-                  </div>
-                </div>
-              </div>
-              <div className="tip-card">
-                <div className="tip-icon">🎯</div>
-                <div className="tip-content">
-                  <div className="tip-title">Proper Alignment</div>
-                  <div className="tip-description">
-                    Similar angles improve accuracy
-                  </div>
-                </div>
-              </div>
-              <div className="tip-card">
-                <div className="tip-icon">🐾</div>
-                <div className="tip-content">
-                  <div className="tip-title">Muzzle vs Face</div>
-                  <div className="tip-description">
-                    Upload nose area and full frontal face
-                  </div>
-                </div>
-              </div>
-              <div className="tip-card">
-                <div className="tip-icon">🖼️</div>
-                <div className="tip-content">
-                  <div className="tip-title">Image Quality</div>
-                  <div className="tip-description">
-                    JPG and PNG work best, avoid blurry images
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+         
         </div>
       </div>
     </>
